@@ -3,7 +3,6 @@
 function generateTable(data) {
     var html = '<table><thead><tr><th>Name</th><th>Mobile</th><th>Street</th></tr></thead><tbody>';
     var mydata = JSON.parse(data);
-    // var data = {"Hermann Meier":{"mobile":"01726019443","street":"fasanenweg"},"Knud Fabian":{"mobile":"017427281272","street":"ahornkringel"}};
     for (const key in mydata) {
         if (mydata.hasOwnProperty(key)) {
             const element = mydata[key];
@@ -15,7 +14,6 @@ function generateTable(data) {
     console.log('html '+ html);
 }
 
-function newEntry ( )
-{
+function newEntry () {
     window.location.href = "./newentry.html";
 }

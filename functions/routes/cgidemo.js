@@ -79,6 +79,7 @@ router.use(validateFirebaseIdToken);
     admin.database().ref('/addresses/fflorey').once('value').then((snapshot) => {
       res.send(JSON.stringify(snapshot));
     }).catch((err) => {
+      res.status(200);
       res.send('hups... error: ' + err);
     })
   });
@@ -89,13 +90,18 @@ router.use(validateFirebaseIdToken);
     phone = req.body['phone'];
     name = req.body['name'];
     street = req.body['street'];
-    console.log('body: ' + JSON.stringify(req.body));
     console.log(`phone: ${phone} name: ${name} street:${street}`);
     var userdata = { street: street, mobile: phone };
     var updates = {};
     updates[`/${name}`] = userdata;
-    admin.database().ref('/addresses/fflorey').update(updates); 
-    res.send('done');
+    admin.database().ref('/addresses/fflorey').update(updates).then( () => {
+      res.status(200);
+      res.send( { "status": "done" });  
+    }).catch ( (err) => {
+      console.log('error: ' + err);
+      res.status(500);
+      res.send( { "status": "error" });  
+    })
   });
 
   ////////////////////////////////////////////////////////////////////////////////

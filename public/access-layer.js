@@ -4,26 +4,26 @@
 const baseurl = "/cgidemo";
 
 // server decides which where to store 
-function setNewAddressForUser ( name, phone, street, callback ) {
-    console.log('aha, setdings called with name' + name);
+function setNewAddressForUser ( user, mycallback ) {
+    console.log('aha, setdings called with name' + JSON.stringify(user));
     token = localStorage.getItem('token');
     uri=baseurl+"/storedb";
-    console.log('aha, setdings called with name' + name + "uri: " + uri);
     $.ajax({
         type: 'POST',
         url: uri,
         headers: {
             "Authorization": 'Bearer '+token,
         },
-        data:  { "name": name, "phone": phone, "street": street },
+        data:  user,
         dataType: 'json'
     }).done(function(data) { 
-        console.log('set data:' + data);
-        callback( data );
+        mycallback( data );
+    }).fail(function(jqXHR, textStatus, errorThrown) {
+        console.log('error: ' + textStatus);
     });
 }
 
-function getAddressesFromFirebaseDB ( callback ) {
+function getAddressesFromFirebaseDB ( mycallback ) {
     token = localStorage.getItem('token');
     url=baseurl +"/readdb";
     $.ajax({
@@ -33,11 +33,8 @@ function getAddressesFromFirebaseDB ( callback ) {
             "Authorization": 'Bearer '+token,
         }
     }).done(function(data) { 
-        console.log('get data' + data);
-        callback ( data );
+        mycallback ( data );
+    }).fail(function(jqXHR, textStatus, errorThrown) {
+        console.log('error: ' + textStatus);
     });
-}
-
-function newEntry ( ) {
-    window.location.href = "./newentry.html";
 }
