@@ -8,11 +8,7 @@
     ],
     "rewrites": [
       {
-        "source": "/users/helloworld",
-        "function": "app"
-      },
-      {
-        "source": "/users/readdb",
+        "source": "/cgidemo/**",
         "function": "app"
       }
     ]
