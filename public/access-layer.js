@@ -7,14 +7,14 @@ const baseurl = "/cgidemo";
 function setNewAddressForUser ( user, mycallback ) {
     console.log('aha, setdings called with name' + JSON.stringify(user));
     token = localStorage.getItem('token');
-    uri=baseurl+"/storedb";
+    uri = baseurl+"/storedb";
     $.ajax({
         type: 'POST',
         url: uri,
         headers: {
-            "Authorization": 'Bearer '+token,
+            "Authorization": 'Bearer ' + token,
         },
-        data:  user,
+        data: user,
         dataType: 'json'
     }).done(function(data) { 
         mycallback( data );
@@ -25,12 +25,12 @@ function setNewAddressForUser ( user, mycallback ) {
 
 function getAddressesFromFirebaseDB ( mycallback ) {
     token = localStorage.getItem('token');
-    url=baseurl +"/readdb";
+    url = baseurl + "/readdb";
     $.ajax({
         type: 'GET',
         url: url,
         headers: {
-            "Authorization": 'Bearer '+token,
+            "Authorization": 'Bearer ' + token,
         }
     }).done(function(data) { 
         mycallback ( data );

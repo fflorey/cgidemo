@@ -16,6 +16,9 @@
   <!-- initialize the SDK after all desired features are loaded -->
   <script defer src="/__/firebase/init.js"></script>
 
+
+  <script defer src="./user.js"></script>
+
   <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <script defer src="/js/materialize.min.js"></script>
@@ -28,10 +31,15 @@
 <body>
   <nav class="red darken-4" role="navigation">
     <div class="nav-wrapper container">
-      <a id="logo-container" href="#" class="brand-logo">Logo</a>
+      <a id="logo-container" href="./index.html" class="brand-logo">Logo</a>
       <ul class="right hide-on-med-and-down">
         <li>
           <a href="#">About</a>
+        </li>
+      </ul>
+      <ul class="right hide-on-med-and-down">
+        <li>
+          <a href="./register.html">Register</a>
         </li>
       </ul>
 
@@ -48,7 +56,7 @@
 
   <div class="valign-wrapper row login-box container">
     <div class="col card hoverable s10 pull-s1 m6 pull-m3 l4 pull-l4">
-      <form>
+      <form id="login-form">
         <div class="card-content">
           <span class="card-title">Enter credentials</span>
           <div class="row">
@@ -60,11 +68,12 @@
               <label for="password">Password </label>
               <input type="password" class="validate" name="password" id="password" />
             </div>
+            <div id="errtext" class="red-text"></div>
           </div>
         </div>
         <div class="card-action right-align">
           <input type="reset" id="reset" class="btn-flat grey-text waves-effect">
-          <input type="button" onclick="loginFunction();" class="btn red darken-4 waves-effect waves-light" value="Login">
+          <input type="button" id="login" onclick="loginFunction();" class="btn red waves-effect waves-light btn" value="Login">
         </div>
       </form>
     </div>
@@ -79,21 +88,15 @@
   <p id="load">Firebase SDK Loading&hellip;</p>
 
   <script>
-
-    function loginFunction() {
-      console.log('called: loginFunction');
-      email = $('#email').val();
-      password = $('#password').val();
-      console.log(' email: ' + email + ' password: ' + password);
-      firebase.auth().signInWithEmailAndPassword(email, password).catch(function (error) {
-        // Handle Errors here.
-        console.error('error on login... beeds to be handeled');
-      });
-    }
+    document.querySelector("#login-form").addEventListener("keyup", event => {
+      if (event.key !== "Enter") return;
+      document.querySelector("#login").click();
+      event.preventDefault();
+    });
 
     document.addEventListener('DOMContentLoaded', function () {
 
-      firebase.auth().onAuthStateChanged(user => {      
+      firebase.auth().onAuthStateChanged(user => {
         if (user) {
           // User is signed in.
           firebase.auth().currentUser.getIdToken(/* forceRefresh */ true).then(function (idToken) {
@@ -107,12 +110,13 @@
             console.error('cant get token for user ' + user);
           });
         } else {
-          console.log('right - logout done');
+          console.log('no user logged in');
         }
       });
 
       $("#reset").on("click", function () {
         $('label').removeClass('active');
+        document.querySelector("#errtext").textContent = "";
       });
 
 
@@ -134,6 +138,7 @@
         document.getElementById('load').innerHTML = 'Error loading the Firebase SDK, check the console.';
       }
     });
+
   </script>
 </body>
 

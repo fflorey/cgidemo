@@ -1,17 +1,35 @@
 // token must be saved in localStorage, otherwise 
 
 function generateTable(data) {
-    var html = '<table><thead><tr><th>Name</th><th>Mobile</th><th>Street</th></tr></thead><tbody>';
+    var table = document.createElement('table');
+    var head = table.createTHead();
+    var headRow = head.insertRow();
+
+    var columns = ["Name", "Mobile", "Street"];
+    columns.forEach(column => {
+        var cell = document.createElement('th');
+        cell.innerHTML = column;
+        headRow.appendChild(cell);
+    });
+
+    var body = table.createTBody();
     var mydata = JSON.parse(data);
+
     for (const key in mydata) {
         if (mydata.hasOwnProperty(key)) {
             const element = mydata[key];
-            html += '<tr><td>'+key+'</td>' + '<td>' + element.mobile +'</td><td>' + element.street +'</td></tr>'
+            var row = body.insertRow();
+
+            var name = row.insertCell();
+            name.textContent = key;
+            var mobile = row.insertCell();
+            mobile.textContent = element.mobile;
+            var street = row.insertCell();
+            street.textContent = element.street;
         }
     }
-    html += '</tbody></table>';
-    $("#addresstable").html ( html );
-    console.log('html '+ html);
+
+    $("#addresstable").append(table);
 }
 
 function newEntry () {

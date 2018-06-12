@@ -13,12 +13,12 @@ admin.initializeApp(functions.config().firebase);
 // Get the Database service for the default app
 
 firebase.initializeApp({
-  apiKey: "AIzaSyCOl462iFVVRwYTTAoZubovz2WsX7ztdM8",
-  authDomain: "cgi-simpleapp.firebaseapp.com",
-  databaseURL: "https://cgi-simpleapp.firebaseio.com",
-  projectId: "cgi-simpleapp",
-  storageBucket: "cgi-simpleapp.appspot.com",
-  messagingSenderId: "872171092367"
+  apiKey: "AIzaSyBaCQ9G7H7OQfTOphWoSSfC3JVaGs7MTZc",
+  authDomain: "cgidemo-4b932.firebaseapp.com",
+  databaseURL: "https://cgidemo-4b932.firebaseio.com",
+  projectId: "cgidemo-4b932",
+  storageBucket: "cgidemo-4b932.appspot.com",
+  messagingSenderId: "1026068444460"
 });
 
 var defaultDatabase = firebase.database();
@@ -75,33 +75,43 @@ router.use(validateFirebaseIdToken);
 
   /* GET users listing. */
   router.get('/readdb', function (req, res, next) {
-    console.log('token: ' + JSON.stringify(req.user));
-    admin.database().ref('/addresses/fflorey').once('value').then((snapshot) => {
+    //console.log('token: ' + JSON.stringify(req.user));
+    var currentUser = req.user.user_id;
+    console.log('readdb -> user: ' + currentUser);
+
+    admin.database().ref('/addresses/' + currentUser).once('value').then((snapshot) => {
       res.send(JSON.stringify(snapshot));
     }).catch((err) => {
       res.status(200);
       res.send('hups... error: ' + err);
-    })
+    });
+
   });
 
   /* GET users listing. */
   router.post('/storedb', function (req, res, next) {
-    console.log('STOREDB: token: ' + JSON.stringify(req.user));
-    phone = req.body['phone'];
+    //console.log('STOREDB: token: ' + JSON.stringify(req.user));
+    var currentUser = req.user.user_id;
+    console.log('storedb -> user: ' + currentUser);
+
     name = req.body['name'];
+    phone = req.body['phone'];
     street = req.body['street'];
-    console.log(`phone: ${phone} name: ${name} street:${street}`);
-    var userdata = { street: street, mobile: phone };
+    console.log(`name: ${name} phone: ${phone} street:${street}`);
+
+    var userdata = {mobile: phone, street: street};
     var updates = {};
     updates[`/${name}`] = userdata;
-    admin.database().ref('/addresses/fflorey').update(updates).then( () => {
+
+    admin.database().ref('/addresses/' + currentUser).update(updates).then( () => {
       res.status(200);
       res.send( { "status": "done" });  
     }).catch ( (err) => {
       console.log('error: ' + err);
       res.status(500);
       res.send( { "status": "error" });  
-    })
+    });
+
   });
 
   ////////////////////////////////////////////////////////////////////////////////
